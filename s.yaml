@@ -1,0 +1,28 @@
+edition: 3.0.0
+name: image-compress
+access: 'undefined'
+vars:
+  region: 'cn-hangzhou'
+resources:
+  framework:
+    component: fc3
+    props:
+      region: ${vars.region}
+      description: image compress
+      runtime: python3.9
+      handler: index.handler
+      memorySize: 1024
+      timeout: 300
+      functionName: 'image-process-dka5'
+      code: ./code
+      role: 'acs:ram::1754903260872244:role/aliyunfcdefaultrole'
+  fc3_domain_0:
+    component: fc3-domain
+    props:
+      region: ${vars.region}
+      domainName: auto
+      protocol: HTTP
+      routeConfig:
+        routes:
+          - path: /*
+            functionName: 'image-process-dka5'
