@@ -9,7 +9,7 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased')
 
 # Step 4: Preprocess the text
-df = pd.read_excel(r'D:\Demopython\ex spiders\dongchedi\user_content_clearing.xlsx')
+df = pd.read_excel(r'/code/user_content_clearing_1.xlsx')
 
 
 def npl_simi(content):
@@ -38,11 +38,9 @@ def npl_simi(content):
 
 try:
     df['内容'] = df['内容'].apply(lambda row: str(row).replace("', '", ""))
-    # 对于每个组，使用npl_simi函数计算相似度并展平
-    batch_size = 30
 
-    df['相似度'] = df.groupby('昵称')['内容'].transform(lambda x: np.array([npl_simi(x[i:i+batch_size]) for i in range(0, len(x), batch_size)]).flatten())
+    df['相似度'] = df.groupby('昵称')['内容'].transform(lambda x: np.array(npl_simi(x)).flatten())
 except Exception as e:
     print(f"An error occurred: {e}")
 finally:
-    df.to_excel('output_with_similarity.xlsx', index= False)
+    df.to_excel('output_with_similarity_.xlsx', index= False)

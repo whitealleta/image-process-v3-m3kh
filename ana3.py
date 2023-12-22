@@ -3,7 +3,7 @@ from transformers import BertTokenizer, BertModel
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import numpy as np
-import time
+
 
 
 # Step 2: Load the pre-trained BERT model and tokenizer
@@ -11,11 +11,10 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased')
 
 # Step 4: Preprocess the text
-df = pd.read_excel(r'output_part_1.xlsx')
+df = pd.read_excel(r'/code/user_content_clearing_1.xlsx')
 
 
 def npl_simi(content):
-    time.sleep(1)
     outputs_list = []
     for text in content:
             inputs = tokenizer(text[:500], return_tensors="pt")
@@ -42,8 +41,9 @@ def npl_simi(content):
 try:
 
     # 对于每个组，使用npl_simi函数计算相似度并展平
-    df['相似度'] = df.groupby('汽车品牌')['评论内容'].transform(lambda x: np.array(npl_simi(x)).flatten())
+    df['相似度'] = df.groupby('昵称')['内容'].transform(lambda x: np.array(npl_simi(x)).flatten())
+    #df['相似度'] = df.groupby('汽车品牌')['评论内容'].transform(lambda x: np.array(npl_simi(x)).flatten())
 except Exception as e:
     print(f"An error occurred: {e}")
 finally:
-    df.to_excel('dongchedi/output_with_similarity_car_comments.xlsx_1', index= False)
+    df.to_excel('output_with_similarity_car_comments.xlsx_1', index= False)
